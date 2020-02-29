@@ -1,0 +1,6 @@
+[submodule "CppND-Route-Planning-Project-master/thirdparty/pugixml"]
+	path = CppND-Route-Planning-Project-master/thirdparty/pugixml
+	url = https://github.com/zeux/pugixml.git
+[submodule "CppND-Route-Planning-Project-master/thirdparty/googletest"]
+	path = CppND-Route-Planning-Project-master/thirdparty/googletest
+	url = https://github.com/abseil/googletest.git
