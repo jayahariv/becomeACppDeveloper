@@ -31,10 +31,13 @@
 *.out
 *.app
 
-# CppND-Route-Planning-Project
-CppND-Route-Planning-Project/draw.cpp
-CppND-Route-Planning-Project/test.cpp
-CppND-Route-Planning-Project/build/
-CppND-Route-Planning-Project/bin/
-CppND-Route-Planning-Project/lib/
+# CppND-Route-Planning-Project-master
+CppND-Route-Planning-Project-master/draw.cpp
+CppND-Route-Planning-Project-master/test.cpp
+CppND-Route-Planning-Project-master/build/
+CppND-Route-Planning-Project-master/bin/
+CppND-Route-Planning-Project-master/lib/
+CppND-Route-Planning-Project-master/.vscode/
 
+# Misc 
+.DS_Store
