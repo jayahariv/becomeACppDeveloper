@@ -26,7 +26,7 @@ float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 #ifdef ENABLE_LOG
     std::cout << "\n>> Adding Neighbors";
-    std::cout << "\n(" << current_node->x << ", " << current_node->y << ")";
+    std::cout << "\n(" << current_node->x << ", " << current_node->y << ", " << current_node->h_value << ", " << current_node->g_value << ")\n";
 #endif
     current_node->FindNeighbors();
     int neighborCount = current_node->neighbors.size();
@@ -45,16 +45,33 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 }
 
 RouteModel::Node *RoutePlanner::NextNode() {
+#ifdef ENABLE_LOG
+    std::cout << "\n>> NextNode";
+#endif
     std::sort(open_list.begin(), open_list.end(), [](const RouteModel::Node* n1, const RouteModel::Node* n2) {
         return (n1->h_value + n1->g_value) > (n2->h_value + n2->g_value);
     });
 
+    if (open_list.size() == 0) {
+#ifdef ENABLE_LOG
+    std::cout << "\tOpen list became empty!";
+#endif
+        return nullptr;
+    }
+    
     auto next = open_list.back();
     open_list.pop_back();
+#ifdef ENABLE_LOG
+    std::cout << "\t(" << next->x << ", " << next->y << ", " << next->h_value << ", " << next->g_value << "): open-list count = " << open_list.size();
+#endif
     return next;
 }
 
 std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node) {
+#ifdef ENABLE_LOG
+    std::cout << "\n>> ConstructFinalPath";
+#endif
+    
     // Create path_found vector
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
@@ -68,21 +85,36 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     path_found.insert(path_found.begin(), *current);
 
     distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
+#ifdef ENABLE_LOG
+    std::cout << "\tDistance" << distance;
+#endif
     return path_found;
 
 }
 
-
-// TODO 7: Write the A* Search algorithm here.
-// Tips:
-// - Use the AddNeighbors method to add all of the neighbors of the current node to the open_list.
-// - Use the NextNode() method to sort the open_list and return the next node.
-// - When the search has reached the end_node, use the ConstructFinalPath method to return the final path that was found.
-// - Store the final path in the m_Model.path attribute before the method exits. This path will then be displayed on the map tile.
-
 void RoutePlanner::AStarSearch() {
-    RouteModel::Node *current_node = nullptr;
+    RouteModel::Node *current_node = start_node;
 
-    // TODO: Implement your solution here.
+    if (start_node->x == end_node->x && start_node->y == end_node->y) {
+#ifdef ENABLE_LOG
+            std::cout << "\nStart and End are same. Found Node!!\n";
+#endif
+            m_Model.path = ConstructFinalPath(end_node);
+            return;
+    }
 
+    while (current_node != nullptr) {
+        AddNeighbors(current_node);
+        RouteModel::Node* next = NextNode();
+
+        if (next->x == end_node->x && next->y == end_node->y) {
+            m_Model.path = ConstructFinalPath(end_node);
+#ifdef ENABLE_LOG
+            std::cout << "\n(" << next->x << ", " << next->y << ") = " << "(" << end_node->x << ", " << end_node->y << ") \tFound Node!!\n";
+#endif
+            return;
+        }
+
+        current_node = next;
+    }
 }
