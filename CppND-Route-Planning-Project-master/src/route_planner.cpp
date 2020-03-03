@@ -1,5 +1,6 @@
 #include "route_planner.h"
 #include <algorithm>
+#include <iostream>
 
 RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y): m_Model(model) {
     // Convert inputs to percentage:
@@ -8,9 +9,14 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
     end_x *= 0.01;
     end_y *= 0.01;
 
-    // TODO 2: Use the m_Model.FindClosestNode method to find the closest nodes to the starting and ending coordinates.
-    // Store the nodes you find in the RoutePlanner's start_node and end_node attributes.
+    start_node = &(m_Model.FindClosestNode(start_x, start_y));
+    end_node = &(m_Model.FindClosestNode(end_x, end_y));
 
+#ifdef ENABLE_LOG
+    std::cout << "\n>> Find Closest Node ";
+    std::cout << "\nStart = (" << start_node->x << ", " << start_node->y << ")";
+    std::cout << "\nEnd = (" << end_node->x << ", " << end_node->y << ")\n";
+#endif
 }
 
 

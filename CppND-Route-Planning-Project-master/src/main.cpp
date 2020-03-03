@@ -7,6 +7,7 @@
 #include "route_model.h"
 #include "render.h"
 #include "route_planner.h"
+#include "shared.h"
 
 using namespace std::experimental;
 

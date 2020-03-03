@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include "route_model.h"
-
+#include "shared.h"
 
 class RoutePlanner {
   public:

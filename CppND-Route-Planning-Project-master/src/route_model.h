@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include "model.h"
 #include <iostream>
+#include "shared.h"
 
 class RouteModel : public Model {
 
