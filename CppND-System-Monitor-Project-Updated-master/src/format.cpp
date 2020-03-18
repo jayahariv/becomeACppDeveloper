@@ -12,5 +12,5 @@ string Format::ElapsedTime(long seconds) {
     int mints = seconds/60;
     seconds = seconds%60;
 
-    return std::stoi(hour) + ":" + std::stoi(mints) + ":" + std::stoi(seconds); 
+    return std::to_string(hour) + ":" + std::to_string(mints) + ":" + std::to_string(seconds); 
 }
