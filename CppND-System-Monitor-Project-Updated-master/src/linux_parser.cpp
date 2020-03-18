@@ -73,15 +73,15 @@ float LinuxParser::MemoryUtilization() {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "MemTotal") {
+        if (key == "MemTotal:") {
           memTotal = std::stof(value);
-        } else if (key == "MemFree") {
+        } else if (key == "MemFree:") {
           memFree = std::stof(value);
         }
       }
     }
   }
-  return memTotal >= 0 && memFree >= 0 ? memTotal - memFree : 0; // in case of error, res = 0;
+  return memTotal >= 0 && memFree >= 0 ? (memTotal - memFree)/memTotal : 0; 
 }
 
 // TODO: Fix the issue Uptime not showing in UI
