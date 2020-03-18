@@ -84,6 +84,7 @@ float LinuxParser::MemoryUtilization() {
   return memTotal >= 0 && memFree >= 0 ? memTotal - memFree : 0; // in case of error, res = 0;
 }
 
+// TODO: Fix the issue Uptime not showing in UI
 long LinuxParser::UpTime() { 
   string totalTime, idleTime;
   string line;
@@ -110,7 +111,26 @@ long LinuxParser::ActiveJiffies() { return 0; }
 long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+vector<string> LinuxParser::CpuUtilization() { 
+  string line, key, user, nice, sys, idle, iowait, irq, softirq, steal, guest, guest_nice;
+  std::ifstream filestream(kProcDirectory + kStatFilename);
+  vector<string> result;
+  if (filestream.is_open()) {
+    std::getline(filestream, line); // skip first line
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> key >> user >> nice >> sys >> idle >> iowait >> irq >> softirq >> steal >> guest >> guest_nice) {
+        if (key.rfind("cpu", 0) == 0) {
+          float totalNonIdle = std::stof(user) + std::stof(nice) + std::stof(sys) + std::stof(irq) + std::stof(softirq) + std::stof(steal);
+          float totalIdle = std::stof(idle) + std::stof(iowait);
+          float percentage = (totalNonIdle - totalIdle)/totalNonIdle;
+          result.push_back(std::to_string(percentage));
+        }
+      }
+    }
+  }
+  return result;
+}
 
 int LinuxParser::TotalProcesses() { 
   string line, key, value;
