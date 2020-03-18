@@ -84,7 +84,6 @@ float LinuxParser::MemoryUtilization() {
   return memTotal >= 0 && memFree >= 0 ? (memTotal - memFree)/memTotal : 0; 
 }
 
-// TODO: Fix the issue Uptime not showing in UI
 long LinuxParser::UpTime() { 
   string totalTime, idleTime;
   string line;
