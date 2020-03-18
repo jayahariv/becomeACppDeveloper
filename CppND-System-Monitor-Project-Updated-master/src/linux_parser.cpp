@@ -66,7 +66,7 @@ vector<int> LinuxParser::Pids() {
 
 float LinuxParser::MemoryUtilization() { 
   string line, key, value;
-  std::ifstream filestream(kProcDirectory + kStatFilename);
+  std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   float memTotal = -1;
   float memFree = -1;
   if (filestream.is_open()) {
