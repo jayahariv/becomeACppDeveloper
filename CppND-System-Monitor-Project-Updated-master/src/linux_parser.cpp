@@ -124,7 +124,7 @@ vector<string> LinuxParser::CpuUtilization() {
           float totalNonIdle = std::stof(user) + std::stof(nice) + std::stof(sys) + std::stof(irq) + std::stof(softirq) + std::stof(steal);
           float totalIdle = std::stof(idle) + std::stof(iowait);
           float percentage = (totalNonIdle - totalIdle)/totalNonIdle;
-          result.push_back(std::to_string(percentage));
+          result.push_back(std::to_string(percentage * 100));
         }
       }
     }
