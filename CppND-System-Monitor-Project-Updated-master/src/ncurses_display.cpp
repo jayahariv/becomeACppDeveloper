@@ -35,7 +35,7 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   std::vector<float> cpu_util_list = system.Cpu().Utilization();
   for (int index = 0; index < cpu_util_list.size(); index++) {
     float percentage = cpu_util_list[index];
-    mvwprintw(window, ++row, 2, ("cpu" + std::to_string(index)).c_str);
+    mvwprintw(window, ++row, 2, ("cpu" + std::to_string(index)).c_str());
     wattron(window, COLOR_PAIR(1));
     mvwprintw(window, row, 10, "");
     wprintw(window, ProgressBar(percentage).c_str());
