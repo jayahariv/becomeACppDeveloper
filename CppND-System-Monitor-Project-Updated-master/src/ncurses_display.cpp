@@ -33,7 +33,7 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   mvwprintw(window, ++row, 2, ("OS: " + system.OperatingSystem()).c_str());
   mvwprintw(window, ++row, 2, ("Kernel: " + system.Kernel()).c_str());
   std::vector<float> cpu_util_list = system.Cpu().Utilization();
-  for (int index = 0; index < cpu_util_list.size(); index++) {
+  for (unsigned int index = 0; index < cpu_util_list.size(); index++) {
     float percentage = cpu_util_list[index];
     mvwprintw(window, ++row, 2, ("cpu" + std::to_string(index)).c_str());
     wattron(window, COLOR_PAIR(1));
@@ -73,7 +73,7 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
   mvwprintw(window, row, time_column, "TIME+");
   mvwprintw(window, row, command_column, "COMMAND");
   wattroff(window, COLOR_PAIR(2));
-  for (unsigned int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i) {
     mvwprintw(window, ++row, pid_column, to_string(processes[i].Pid()).c_str());
     mvwprintw(window, row, user_column, processes[i].User().c_str());
     float cpu = processes[i].CpuUtilization() * 100;
