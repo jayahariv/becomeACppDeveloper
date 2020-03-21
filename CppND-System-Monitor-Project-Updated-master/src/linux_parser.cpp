@@ -208,6 +208,39 @@ string LinuxParser::User(int pid) {
   return "error";
 }
 
-// TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid[[maybe_unused]]) { 
+  string value;
+  string line;
+  std::ifstream stream(kProcDirectory + std::to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    string vals[52];
+    for (int i = 0; linestream >> value)
+      vals[i++] = value;
+    return std::stol(vals[21])/sysconf(_SC_CLK_TCK);
+  }
+  return -1;  // error 
+}
+
+float LinuxParser::ProcessUtilization(int pid) {
+  string value;
+  string line;
+  std::ifstream stream(kProcDirectory + std::to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    string vals[52];
+    for (int i = 0; linestream >> value)
+      vals[i++] = value;
+
+    float total = std::stol(vals[13]) +  // user time 
+                  std::stol(vals[14]) +  // kernel time 
+                  std::stol(vals[15]) +  // cutime - child utime. 
+                  std::stol(vals[16]);   // cstime  - child stime. 
+    
+    float seconds = UpTime(pid) -                                   // uptime of process
+                      (std::stol(vals[21])/sysconf(_SC_CLK_TCK));   // start time in secs
+    return 100 * ((total/sysconf(_SC_CLK_TCK))/seconds);
+  }
+}
