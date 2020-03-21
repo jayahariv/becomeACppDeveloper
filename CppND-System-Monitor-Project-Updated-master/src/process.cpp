@@ -11,8 +11,8 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-Process(int pid):  pid_(pid) {
-    user_ = LinuxParser.User(pid);
+Process::Process(int pid) :  pid_(pid) {
+    user_ = LinuxParser::User(pid);
 }
 
 // TODO: Return this process's ID

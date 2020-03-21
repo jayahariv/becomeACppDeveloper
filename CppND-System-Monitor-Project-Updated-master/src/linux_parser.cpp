@@ -197,7 +197,7 @@ string LinuxParser::User(int pid) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       int i = 0;
-      while (std::getline(linestream, value, ',')) {
+      while (std::getline(linestream, value, ':')) {
         vals[i++] = value;
       }
       if (std::stoi(vals[2]) == pid) {
