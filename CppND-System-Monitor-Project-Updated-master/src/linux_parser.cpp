@@ -110,10 +110,10 @@ long LinuxParser::ActiveJiffies() { return 0; }
 long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { 
+vector<float> LinuxParser::CpuUtilization() { 
   string line, key, user, nice, sys, idle, iowait, irq, softirq, steal, guest, guest_nice;
   std::ifstream filestream(kProcDirectory + kStatFilename);
-  vector<string> result;
+  vector<float> result;
   if (filestream.is_open()) {
     std::getline(filestream, line); // skip first line
     while (std::getline(filestream, line)) {
@@ -122,8 +122,9 @@ vector<string> LinuxParser::CpuUtilization() {
         if (key.rfind("cpu", 0) == 0) {
           float totalNonIdle = std::stof(user) + std::stof(nice) + std::stof(sys) + std::stof(irq) + std::stof(softirq) + std::stof(steal);
           float totalIdle = std::stof(idle) + std::stof(iowait);
-          float percentage = (totalNonIdle - totalIdle)/totalNonIdle;
-          result.push_back(std::to_string(percentage * 100));
+          float total = totalNonIdle + totalIdle;
+          float percentage = (total - totalIdle)/total;
+          result.push_back(percentage);
         }
       }
     }
