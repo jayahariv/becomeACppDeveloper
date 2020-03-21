@@ -216,8 +216,8 @@ long LinuxParser::UpTime(int pid[[maybe_unused]]) {
     std::getline(stream, line);
     std::istringstream linestream(line);
     string vals[52];
-    for (int i = 0; linestream >> value)
-      vals[i++] = value;
+    for (int i = 0; linestream >> value; i++)
+      vals[i] = value;
     return std::stol(vals[21])/sysconf(_SC_CLK_TCK);
   }
   return -1;  // error 
@@ -231,8 +231,8 @@ float LinuxParser::ProcessUtilization(int pid) {
     std::getline(stream, line);
     std::istringstream linestream(line);
     string vals[52];
-    for (int i = 0; linestream >> value)
-      vals[i++] = value;
+    for (int i = 0; linestream >> value; i++)
+      vals[i] = value;
 
     float total = std::stol(vals[13]) +  // user time 
                   std::stol(vals[14]) +  // kernel time 
@@ -243,4 +243,6 @@ float LinuxParser::ProcessUtilization(int pid) {
                       (std::stol(vals[21])/sysconf(_SC_CLK_TCK));   // start time in secs
     return 100 * ((total/sysconf(_SC_CLK_TCK))/seconds);
   }
+
+  return -1; // error
 }
