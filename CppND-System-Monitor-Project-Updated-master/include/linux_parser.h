@@ -50,9 +50,10 @@ long IdleJiffies();
 std::string Command(int pid);
 float Ram(int pid);
 float ProcessUtilization(int pid);
-string Uid(int pid);
+std::string Uid(int pid);
 std::string User(int pid);
 long int UpTime(int pid);
+std::vector<std::string> Split(std::string strToSplit, char delimeter);
 };  // namespace LinuxParser
 
 #endif

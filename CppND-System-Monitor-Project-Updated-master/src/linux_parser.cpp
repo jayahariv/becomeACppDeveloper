@@ -207,35 +207,44 @@ string LinuxParser::Uid(int pid) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
         if (key == "Uid:") {
-          return std::stoi(value);
+          return value;
         }
       }
     }
   }
-  return -1;
+  return "-1";
+}
+
+std::vector<std::string> LinuxParser::Split(std::string strToSplit, char delimeter)
+{
+    std::stringstream ss(strToSplit);
+    std::string item;
+    std::vector<std::string> splittedStrings;
+    while (std::getline(ss, item, delimeter))
+    {
+       splittedStrings.push_back(item);
+    }
+    return splittedStrings;
 }
 
 string LinuxParser::User(int pid) {
-  string uid = LinuxParser::Uid(pid);
+  string uid = Uid(pid);
   if (uid == "-1")
     return "uid=-1";
   
-  string vals[3];
   string line, value;
   std::ifstream filestream(kPasswordPath);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
-      for (int i = 0; i < 3; i++) {
-        std::getline(linestream, value, ':');
-        vals[i++] = value;
-      }
-      if (std::stoi(vals[2]) == uid)
+      std::vector<string> vals = Split(line, ':');
+      if (vals[2] == uid)
         return vals[0];
     }
   }
-  return "no-user";
+  return uid;
 }
+
 
 long LinuxParser::UpTime(int pid) {
   string value;
