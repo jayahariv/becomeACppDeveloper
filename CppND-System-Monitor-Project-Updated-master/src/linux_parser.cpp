@@ -282,9 +282,11 @@ float LinuxParser::ProcessUtilization(int pid) {
     if (uptime < 0)
       return -1.1;
 
-    float seconds = uptime -                           // uptime of process
-        (std::stol(vals[21]) / sysconf(_SC_CLK_TCK));  // start time in secs
+    float start_time = (std::stol(vals[21]) / sysconf(_SC_CLK_TCK));
+    if (start_time <= 0) 
+      return -1.2;
     
+    float seconds = uptime - start_time;
     return 100 * (total / seconds);
   }
 
