@@ -1,30 +1,35 @@
+#include "system.h"
+
 #include <unistd.h>
+
 #include <cstddef>
 #include <set>
 #include <string>
 #include <vector>
 
+#include "linux_parser.h"
 #include "process.h"
 #include "processor.h"
-#include "system.h"
-#include "linux_parser.h"
 
 using std::set;
 using std::size_t;
 using std::string;
 using std::vector;
 
-System::System() : kernel_(LinuxParser::Kernel()), os_(LinuxParser::OperatingSystem()) { }
+System::System()
+    : kernel_(LinuxParser::Kernel()), os_(LinuxParser::OperatingSystem()) {}
 
 // TODO: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
-vector<Process>& System::Processes() { 
-    vector<int> pids = LinuxParser::Pids();
-    for (int pid: pids) {
-        processes_.push_back(Process(pid));
-    }
-    return processes_; 
+vector<Process>& System::Processes() {
+  vector<int> pids = LinuxParser::Pids();
+  std::sort(pids.begin(), pids.end(),
+            [](Process a, Process b) -> bool { return b < a; });
+  for (int pid : pids) {
+    processes_.push_back(Process(pid));
+  }
+  return processes_;
 }
 
 std::string System::Kernel() { return kernel_; }

@@ -18,14 +18,14 @@ Process::Process(int pid) : pid_(pid) {
   ram_ = LinuxParser::Ram(pid_);
   cpu_util = LinuxParser::ProcessUtilization(pid_);
   uptime_ = LinuxParser::UpTime(pid_);
+  command_ = LinuxParser::Command(pid_);
 }
 
 int Process::Pid() { return pid_; }
 
 float Process::CpuUtilization() { return cpu_util; }
 
-// TODO: Return the command that generated this process
-string Process::Command() { return string(); }
+string Process::Command() { return command_; }
 
 string Process::Ram() { return std::to_string(ram_); }
 
@@ -33,4 +33,4 @@ string Process::User() { return user_; }
 
 long int Process::UpTime() { return uptime_; }
 
-bool Process::operator<(Process const& a) const { return ram_ > a.ram_; }
+bool Process::operator<(Process const& a) const { return ram_ < a.ram_; }
