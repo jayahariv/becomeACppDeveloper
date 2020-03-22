@@ -278,19 +278,10 @@ float LinuxParser::ProcessUtilization(int pid) {
                   std::stol(vals[16]);   // cstime  - child stime.
     total = total / sysconf(_SC_CLK_TCK); // covert to secs
 
-    long uptime = UpTime(pid);
-    if (uptime < 0)
-      return -1.1;
-
+    long uptime = UpTime();
     float start_time = (std::stol(vals[21]) / sysconf(_SC_CLK_TCK));
-    if (start_time <= 0) 
-      return -1.2;
-    
     float seconds = uptime - start_time;
-    if (seconds <= 0)
-      return -1.3;
-    
-    return 100 * (total / seconds);
+    return seconds > 0 ? 100 * (total / seconds) : 0;
   }
 
   return -1;  // error
