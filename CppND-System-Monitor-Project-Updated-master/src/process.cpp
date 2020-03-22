@@ -33,6 +33,4 @@ string Process::User() { return user_; }
 
 long int Process::UpTime() { return uptime_; }
 
-bool Process::operator<(Process const& a) const {
-  return ram_ < a.ram_ || cpu_util_ < a.cpu_util_;
-}
+bool Process::operator<(Process const& a) const { return ram_ < a.ram_; }
