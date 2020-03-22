@@ -217,25 +217,27 @@ string LinuxParser::Uid(int pid) {
 }
 
 string LinuxParser::User(int pid) {
-  string vals[7];
+  string vals[3];
   string line, value;
   std::ifstream filestream(kPasswordPath);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       int i = 0;
-      while (std::getline(linestream, value, ':')) {
+      for (int i = 0; i < 3; i++) {
+        std::getline(linestream, value, ':');
         vals[i++] = value;
       }
-      if (std::stoi(vals[2]) == pid) {
+      if (std::stoi(vals[2]) == pid)
         return vals[0];
-      }
     }
+    
+    printf(">> %d %s %s", pid, vals[0].c_str(), vals[2].c_str());
   }
   return "error";
 }
 
-long LinuxParser::UpTime(int pid [[maybe_unused]]) {
+long LinuxParser::UpTime(int pid) {
   string value;
   string line;
   std::ifstream stream(kProcDirectory + std::to_string(pid) + kStatFilename);
