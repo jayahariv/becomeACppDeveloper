@@ -198,7 +198,7 @@ float LinuxParser::Ram(int pid) {
   return 0;
 }
 
-string LinuxParser::Uid(int pid) {
+int LinuxParser::Uid(int pid) {
   string line, key, value;
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
                            kStatusFilename);
@@ -206,14 +206,13 @@ string LinuxParser::Uid(int pid) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "uid:") {
-          float val = std::stof(value);
-          return std::to_string(val / 1000);
+        if (key == "Uid:") {
+          return std::stoi(value);
         }
       }
     }
   }
-  return "error";
+  return -1;
 }
 
 string LinuxParser::User(int pid) {
@@ -223,7 +222,6 @@ string LinuxParser::User(int pid) {
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
-      int i = 0;
       for (int i = 0; i < 3; i++) {
         std::getline(linestream, value, ':');
         vals[i++] = value;
