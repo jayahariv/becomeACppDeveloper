@@ -287,6 +287,9 @@ float LinuxParser::ProcessUtilization(int pid) {
       return -1.2;
     
     float seconds = uptime - start_time;
+    if (seconds <= 0)
+      return -1.3;
+    
     return 100 * (total / seconds);
   }
 
