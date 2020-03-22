@@ -169,7 +169,7 @@ int LinuxParser::RunningProcesses() {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Command(int pid[[maybe_unused]]) { return string(); }
 
-string LinuxParser::Ram(int pid) { 
+float LinuxParser::Ram(int pid) { 
   string line, key, value;
   std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatusFilename);
   if (filestream.is_open()) {
@@ -177,12 +177,12 @@ string LinuxParser::Ram(int pid) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
         if (key == "VmSize:") {
-          return value;
+          return std::stof(value);
         }
       }
     }
   }
-  return "error"; 
+  return 0; 
 }
 
 string LinuxParser::Uid(int pid) { 
