@@ -215,36 +215,32 @@ string LinuxParser::Uid(int pid) {
   return "-1";
 }
 
-std::vector<std::string> LinuxParser::Split(std::string strToSplit, char delimeter)
-{
-    std::stringstream ss(strToSplit);
-    std::string item;
-    std::vector<std::string> splittedStrings;
-    while (std::getline(ss, item, delimeter))
-    {
-       splittedStrings.push_back(item);
-    }
-    return splittedStrings;
+std::vector<std::string> LinuxParser::Split(std::string strToSplit,
+                                            char delimeter) {
+  std::stringstream ss(strToSplit);
+  std::string item;
+  std::vector<std::string> splittedStrings;
+  while (std::getline(ss, item, delimeter)) {
+    splittedStrings.push_back(item);
+  }
+  return splittedStrings;
 }
 
 string LinuxParser::User(int pid) {
   string uid = Uid(pid);
-  if (uid == "-1")
-    return "uid=-1";
-  
+  if (uid == "-1") return "uid=-1";
+
   string line, value;
   std::ifstream filestream(kPasswordPath);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       std::vector<string> vals = Split(line, ':');
-      if (vals[2] == uid)
-        return vals[0];
+      if (vals[2] == uid) return vals[0];
     }
   }
   return uid;
 }
-
 
 long LinuxParser::UpTime(int pid) {
   string value;
@@ -254,9 +250,8 @@ long LinuxParser::UpTime(int pid) {
     std::getline(stream, line);
     std::istringstream linestream(line);
     std::vector<string> vals;
-    while(linestream >> value)
-      vals.push_back(value);
-    
+    while (linestream >> value) vals.push_back(value);
+
     return std::stol(vals[21]) / sysconf(_SC_CLK_TCK);
   }
   return -1;  // error
@@ -272,11 +267,11 @@ float LinuxParser::ProcessUtilization(int pid) {
     string vals[52];
     for (int i = 0; linestream >> value; i++) vals[i] = value;
 
-    float total = std::stol(vals[13]) +  // user time
-                  std::stol(vals[14]) +  // kernel time
-                  std::stol(vals[15]) +  // cutime - child utime.
-                  std::stol(vals[16]);   // cstime  - child stime.
-    total = total / sysconf(_SC_CLK_TCK); // covert to secs
+    float total = std::stol(vals[13]) +    // user time
+                  std::stol(vals[14]) +    // kernel time
+                  std::stol(vals[15]) +    // cutime - child utime.
+                  std::stol(vals[16]);     // cstime  - child stime.
+    total = total / sysconf(_SC_CLK_TCK);  // covert to secs
 
     long uptime = UpTime();
     float start_time = (std::stol(vals[21]) / sysconf(_SC_CLK_TCK));

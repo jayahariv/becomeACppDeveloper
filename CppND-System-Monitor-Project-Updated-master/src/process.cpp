@@ -15,7 +15,7 @@ using std::vector;
 
 Process::Process(int pid) : pid_(pid) {
   user_ = LinuxParser::User(pid_);
-  ram_ = (int)LinuxParser::Ram(pid_) / 1000; // KBs -> MBs
+  ram_ = (int)LinuxParser::Ram(pid_) / 1000;  // KBs -> MBs
   cpu_util_ = LinuxParser::ProcessUtilization(pid_);
   uptime_ = LinuxParser::UpTime(pid_);
   command_ = LinuxParser::Command(pid_);
@@ -33,4 +33,6 @@ string Process::User() { return user_; }
 
 long int Process::UpTime() { return uptime_; }
 
-bool Process::operator<(Process const& a) const { return cpu_util_ < a.cpu_util_ || ram_ < a.ram_ ; }
+bool Process::operator<(Process const& a) const {
+  return ram_ < a.ram_ || cpu_util_ < a.cpu_util_;
+}
