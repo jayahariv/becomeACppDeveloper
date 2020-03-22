@@ -198,7 +198,7 @@ float LinuxParser::Ram(int pid) {
   return 0;
 }
 
-int LinuxParser::Uid(int pid) {
+string LinuxParser::Uid(int pid) {
   string line, key, value;
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
                            kStatusFilename);
@@ -216,6 +216,10 @@ int LinuxParser::Uid(int pid) {
 }
 
 string LinuxParser::User(int pid) {
+  string uid = LinuxParser::Uid(pid);
+  if (uid == "-1")
+    return "uid=-1";
+  
   string vals[3];
   string line, value;
   std::ifstream filestream(kPasswordPath);
@@ -226,13 +230,11 @@ string LinuxParser::User(int pid) {
         std::getline(linestream, value, ':');
         vals[i++] = value;
       }
-      if (std::stoi(vals[2]) == pid)
+      if (std::stoi(vals[2]) == uid)
         return vals[0];
     }
-    
-    printf(">> %d %s %s", pid, vals[0].c_str(), vals[2].c_str());
   }
-  return "error";
+  return "no-user";
 }
 
 long LinuxParser::UpTime(int pid) {
