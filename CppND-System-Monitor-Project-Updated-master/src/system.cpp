@@ -17,13 +17,19 @@ using std::string;
 using std::vector;
 
 System::System()
-    : kernel_(LinuxParser::Kernel()), os_(LinuxParser::OperatingSystem()), cpu_count_(LinuxParser::CpuCount()) {}
+    : kernel_(LinuxParser::Kernel()),
+      os_(LinuxParser::OperatingSystem()),
+      cpu_count_(LinuxParser::CpuCount()),
+      cpu_(Processor()) {}
+
+Processor& System::Cpu() { return cpu_; }
 
 int System::CpuCount() { return cpu_count_; }
 
 vector<Process>& System::Processes() {
   vector<int> pids = LinuxParser::Pids();
-  std::sort(pids.begin(), pids.end(), [](Process const &a, Process const &b) -> bool { return b < a; });
+  std::sort(pids.begin(), pids.end(),
+            [](Process const& a, Process const& b) -> bool { return b < a; });
   for (int pid : pids) {
     processes_.push_back(Process(pid));
   }

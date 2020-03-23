@@ -11,6 +11,7 @@ class System {
  public:
   System();
   int CpuCount();
+  Processor& Cpu();
   std::vector<Process>& Processes();
   float MemoryUtilization();
   long UpTime();
