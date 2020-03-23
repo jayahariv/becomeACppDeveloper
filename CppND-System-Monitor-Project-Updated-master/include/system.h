@@ -10,8 +10,8 @@
 class System {
  public:
   System();
-  Processor& Cpu();                   // TODO: See src/system.cpp
-  std::vector<Process>& Processes();  // TODO: See src/system.cpp
+  int CpuCount();
+  std::vector<Process>& Processes();
   float MemoryUtilization();
   long UpTime();
   int TotalProcesses();
@@ -24,6 +24,7 @@ class System {
   std::vector<Process> processes_ = {};
   std::string kernel_;
   std::string os_;
+  int cpu_count_;
 };
 
 #endif

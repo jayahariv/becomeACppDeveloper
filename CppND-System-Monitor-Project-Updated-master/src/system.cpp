@@ -17,10 +17,9 @@ using std::string;
 using std::vector;
 
 System::System()
-    : kernel_(LinuxParser::Kernel()), os_(LinuxParser::OperatingSystem()) {}
+    : kernel_(LinuxParser::Kernel()), os_(LinuxParser::OperatingSystem()), cpu_count_(LinuxParser::CpuCount()) {}
 
-// TODO: Return the system's CPU
-Processor& System::Cpu() { return cpu_; }
+int System::CpuCount() { return cpu_count_; }
 
 vector<Process>& System::Processes() {
   vector<int> pids = LinuxParser::Pids();

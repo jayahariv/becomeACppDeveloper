@@ -97,36 +97,31 @@ long LinuxParser::UpTime() {
   return std::stol(totalTime);
 }
 
-// TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
-
-// TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { return 0; }
-
-// TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
-
-// TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
-
-// TODO: Read and return CPU utilization
 vector<float> LinuxParser::CpuUtilization() {
-  string line, key, user, nice, sys, idle, iowait, irq, softirq, steal, guest,
-      guest_nice;
+  string stateVals[10];
+  string line, key;
   std::ifstream filestream(kProcDirectory + kStatFilename);
   vector<float> result;
   if (filestream.is_open()) {
     std::getline(filestream, line);  // skip first line
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
-      while (linestream >> key >> user >> nice >> sys >> idle >> iowait >>
-             irq >> softirq >> steal >> guest >> guest_nice) {
+      while (linestream >> key 
+                        >> stateVals[kUser_] 
+                        >> stateVals[kNice_] 
+                        >> stateVals[kSystem_] 
+                        >> stateVals[kIdle_] 
+                        >> stateVals[kIOwait_]
+                        >> stateVals[kIRQ_] 
+                        >> stateVals[kSoftIRQ_] 
+                        >> stateVals[kSteal_] 
+                        >> stateVals[kGuest_] 
+                        >> stateVals[kGuestNice_]) {
         if (key.rfind("cpu", 0) == 0) {
-          float totalNonIdle = std::stof(user) + std::stof(nice) +
-                               std::stof(sys) + std::stof(irq) +
-                               std::stof(softirq) + std::stof(steal);
-          float totalIdle = std::stof(idle) + std::stof(iowait);
+          float totalNonIdle = std::stof(stateVals[kUser_]) + std::stof(stateVals[kNice_]) +
+                               std::stof(stateVals[kSystem_] ) + std::stof(stateVals[kIRQ_]) +
+                               std::stof(stateVals[kSoftIRQ_]) + std::stof(stateVals[kSteal_]);
+          float totalIdle = std::stof(stateVals[kIdle_]) + std::stof(stateVals[kIOwait_]);
           float total = totalNonIdle + totalIdle;
           float percentage = (total - totalIdle) / total;
           result.push_back(percentage);
@@ -135,6 +130,23 @@ vector<float> LinuxParser::CpuUtilization() {
     }
   }
   return result;
+}
+
+int LinuxParser::CpuCount() {
+  string line, key;
+  std::ifstream filestream(kProcDirectory + kStatFilename);
+  int count = 0;
+  if (filestream.is_open()) {
+    std::getline(filestream, line);  // skip first line
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      
+      while (linestream >> key)
+        if (key.rfind("cpu", 0) == 0)
+          count++;
+    }
+  }
+  return count;
 }
 
 int LinuxParser::TotalProcesses() {
