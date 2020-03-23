@@ -11,7 +11,7 @@ class Process {
   Process(int pid);
   int Pid();
   std::string User();
-  std::string Command();                   // TODO: See src/process.cpp
+  std::string Command();              
   float CpuUtilization();
   std::string Ram();
   long int UpTime();
