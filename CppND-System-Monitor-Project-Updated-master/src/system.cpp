@@ -17,10 +17,10 @@ using std::string;
 using std::vector;
 
 System::System()
-    : kernel_(LinuxParser::Kernel()),
+    : cpu_(Processor()),
+      kernel_(LinuxParser::Kernel()),
       os_(LinuxParser::OperatingSystem()),
-      cpu_count_(LinuxParser::CpuCount()),
-      cpu_(Processor()) {}
+      cpu_count_(LinuxParser::CpuCount()) {}
 
 Processor& System::Cpu() { return cpu_; }
 
