@@ -13,21 +13,15 @@ private:
     wxBoxSizer *_dialogSizer;
     wxBitmap _image;
 
-    //// STUDENT CODE
-    ////
-
-    ChatLogic *_chatLogic;
-
-    ////
-    //// EOF STUDENT CODE
+    std::unique_ptr<ChatLogic> _chatLogic;
 
 public:
     // constructor / destructor
     ChatBotPanelDialog(wxWindow *parent, wxWindowID id);
-    ~ChatBotPanelDialog();
+    ~ChatBotPanelDialog() = default;
 
     // getter / setter
-    ChatLogic *GetChatLogicHandle() { return _chatLogic; }
+    ChatLogic *GetChatLogicHandle() { return _chatLogic.get(); }
 
     // events
     void paintEvent(wxPaintEvent &evt);
