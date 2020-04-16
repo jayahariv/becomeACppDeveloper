@@ -42,11 +42,58 @@ ChatBot::~ChatBot()
     }
 }
 
-//// STUDENT CODE
-////
+ChatBot::ChatBot(const ChatBot &bot) 
+{
+    std::cout << "ChatBot Copy Constructor" << std::endl;
 
-////
-//// EOF STUDENT CODE
+    _chatLogic = nullptr;
+    _rootNode = nullptr;
+
+    _image = new wxBitmap(*bot._image);
+}
+
+ChatBot &ChatBot::operator=(const ChatBot &bot) 
+{
+    std::cout << "ChatBot Copy Assignment Constructor" << std::endl;
+    if (this == &bot)
+        return *this;
+
+    _chatLogic = nullptr;
+    _rootNode = nullptr;
+
+    _image = new wxBitmap(*bot._image);
+    return *this;
+}
+
+ChatBot::ChatBot(ChatBot &&bot)
+{
+    std::cout << "ChatBot Move Constructor" << std::endl;
+
+    _chatLogic = nullptr;
+    _rootNode = nullptr;
+
+    _image = new wxBitmap(*bot._image);
+    bot._chatLogic = nullptr;
+    bot._rootNode = nullptr;
+    bot._image = nullptr;
+}
+
+ChatBot &ChatBot::operator=(ChatBot &&bot)
+{
+    std::cout << "ChatBot Move Assignment Constructor" << std::endl;
+    if (this == &bot)
+        return *this;
+
+    _chatLogic = nullptr;
+    _rootNode = nullptr;
+    _image = new wxBitmap(*bot._image);
+
+    bot._chatLogic = nullptr;
+    bot._rootNode = nullptr;
+    bot._image = nullptr;
+
+    return *this;
+}
 
 void ChatBot::ReceiveMessageFromUser(std::string message)
 {
