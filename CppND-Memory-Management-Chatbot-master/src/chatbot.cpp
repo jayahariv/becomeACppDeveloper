@@ -117,7 +117,9 @@ void ChatBot::ReceiveMessageFromUser(std::string message)
     {
         // sort in ascending order of Levenshtein distance (best fit is at the top)
         std::sort(levDists.begin(), levDists.end(), [](const EdgeDist &a, const EdgeDist &b) { return a.second < b.second; });
-        newNode = levDists.at(0).first->GetChildNode(); // after sorting the best edge is at first position
+        std::weak_ptr<GraphNode> temp = levDists.at(0).first->GetChildNode(); // after sorting the best edge is at first position
+        std::shared_ptr<GraphNode> shared = temp.lock(); // convert to shared pointer for accessing the pointer
+        newNode = shared.get();
     }
     else
     {

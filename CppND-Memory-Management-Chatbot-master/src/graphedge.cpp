@@ -6,12 +6,12 @@ GraphEdge::GraphEdge(int id)
     _id = id;
 }
 
-void GraphEdge::SetChildNode(GraphNode *childNode)
+void GraphEdge::SetChildNode(std::weak_ptr<GraphNode> childNode)
 {
     _childNode = childNode;
 }
 
-void GraphEdge::SetParentNode(GraphNode *parentNode)
+void GraphEdge::SetParentNode(std::weak_ptr<GraphNode> parentNode)
 {
     _parentNode = parentNode;
 }
