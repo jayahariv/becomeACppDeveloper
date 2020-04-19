@@ -27,19 +27,12 @@ ChatBot::ChatBot(std::string filename)
     _rootNode = nullptr;
 
     // load image into heap memory
-    _image = new wxBitmap(filename, wxBITMAP_TYPE_PNG);
+    _image = std::make_unique<wxBitmap>(filename, wxBITMAP_TYPE_PNG);
 }
 
 ChatBot::~ChatBot()
 {
     std::cout << "ChatBot Destructor" << std::endl;
-
-    // deallocate heap memory
-    if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
-    {
-        delete _image;
-        _image = NULL;
-    }
 }
 
 ChatBot::ChatBot(const ChatBot &bot) 
@@ -49,7 +42,7 @@ ChatBot::ChatBot(const ChatBot &bot)
     _chatLogic = nullptr;
     _rootNode = nullptr;
 
-    _image = new wxBitmap(*bot._image);
+    _image = std::make_unique<wxBitmap>(*bot._image);
 }
 
 ChatBot &ChatBot::operator=(const ChatBot &bot) 
@@ -61,7 +54,7 @@ ChatBot &ChatBot::operator=(const ChatBot &bot)
     _chatLogic = nullptr;
     _rootNode = nullptr;
 
-    _image = new wxBitmap(*bot._image);
+    _image = std::make_unique<wxBitmap>(*bot._image);
     return *this;
 }
 
@@ -71,7 +64,7 @@ ChatBot::ChatBot(ChatBot &&bot)
 
     _chatLogic = bot._chatLogic;
     _rootNode = bot._rootNode;
-    _image = bot._image;
+    _image = std::move(bot._image);
     
     bot._chatLogic = nullptr;
     bot._rootNode = nullptr;
@@ -86,7 +79,7 @@ ChatBot &ChatBot::operator=(ChatBot &&bot)
 
     _chatLogic = bot._chatLogic;
     _rootNode = bot._rootNode;
-    _image = bot._image;
+    _image = std::move(bot._image);
 
     bot._chatLogic = nullptr;
     bot._rootNode = nullptr;
@@ -117,9 +110,7 @@ void ChatBot::ReceiveMessageFromUser(std::string message)
     {
         // sort in ascending order of Levenshtein distance (best fit is at the top)
         std::sort(levDists.begin(), levDists.end(), [](const EdgeDist &a, const EdgeDist &b) { return a.second < b.second; });
-        std::weak_ptr<GraphNode> temp = levDists.at(0).first->GetChildNode(); // after sorting the best edge is at first position
-        std::shared_ptr<GraphNode> shared = temp.lock(); // convert to shared pointer for accessing the pointer
-        newNode = shared.get();
+        newNode =  levDists.at(0).first->GetChildNode(); // after sorting the best edge is at first position
     }
     else
     {

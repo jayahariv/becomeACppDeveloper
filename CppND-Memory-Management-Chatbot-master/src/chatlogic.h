@@ -13,14 +13,8 @@ class GraphNode;
 class ChatLogic
 {
 private:
-    //// STUDENT CODE
-    ////
-
     // data handles (owned)
-    std::vector<std::shared_ptr<GraphNode>> _nodes;
-
-    ////
-    //// EOF STUDENT CODE
+    std::vector<std::unique_ptr<GraphNode>> _nodes;
 
     // data handles (not owned)
     GraphNode *_currentNode;
@@ -36,8 +30,8 @@ private:
 
 public:
     // constructor / destructor
-    ChatLogic() = default;
-    ~ChatLogic() = default;
+    ChatLogic();
+    ~ChatLogic();
 
     // getter / setter
     void SetPanelDialogHandle(ChatBotPanelDialog *panelDialog);
