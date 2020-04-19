@@ -69,10 +69,10 @@ ChatBot::ChatBot(ChatBot &&bot)
 {
     std::cout << "ChatBot Move Constructor" << std::endl;
 
-    _chatLogic = nullptr;
-    _rootNode = nullptr;
-
-    _image = new wxBitmap(*bot._image);
+    _chatLogic = bot._chatLogic;
+    _rootNode = bot._rootNode;
+    _image = bot._image;
+    
     bot._chatLogic = nullptr;
     bot._rootNode = nullptr;
     bot._image = nullptr;
@@ -84,9 +84,9 @@ ChatBot &ChatBot::operator=(ChatBot &&bot)
     if (this == &bot)
         return *this;
 
-    _chatLogic = nullptr;
-    _rootNode = nullptr;
-    _image = new wxBitmap(*bot._image);
+    _chatLogic = bot._chatLogic;
+    _rootNode = bot._rootNode;
+    _image = bot._image;
 
     bot._chatLogic = nullptr;
     bot._rootNode = nullptr;
@@ -132,7 +132,7 @@ void ChatBot::ReceiveMessageFromUser(std::string message)
 }
 
 void ChatBot::SetCurrentNode(GraphNode *node)
-{
+{   
     // update pointer to current node
     _currentNode = node;
 
@@ -143,6 +143,7 @@ void ChatBot::SetCurrentNode(GraphNode *node)
     std::string answer = answers.at(dis(generator));
 
     // send selected node answer to user
+    _chatLogic->SetChatbotHandle(this);
     _chatLogic->SendMessageToUser(answer);
 }
 

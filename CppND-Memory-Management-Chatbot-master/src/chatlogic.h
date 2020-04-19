@@ -36,8 +36,8 @@ private:
 
 public:
     // constructor / destructor
-    ChatLogic();
-    ~ChatLogic();
+    ChatLogic() = default;
+    ~ChatLogic() = default;
 
     // getter / setter
     void SetPanelDialogHandle(ChatBotPanelDialog *panelDialog);
